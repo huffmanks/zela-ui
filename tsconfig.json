@@ -1,4 +1,12 @@
 {
   "extends": "./tsconfig.base.json",
-  "files": ["package.json"]
+  "compilerOptions": {
+    "composite": true
+  },
+  "include": [],
+  "references": [
+    { "path": "./tsconfig.node.json" },
+    { "path": "./packages/ui" },
+    { "path": "./apps/docs" }
+  ]
 }

@@ -7,7 +7,7 @@ const config: Config = {
   singleQuote: false,
   bracketSameLine: true,
   singleAttributePerLine: false,
-  trailingComma: "es5"
+  trailingComma: "es5",
 };
 
 export default config;

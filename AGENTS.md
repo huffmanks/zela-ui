@@ -1,296 +1,77 @@
-# Zela Web Component Library — Architecture & Execution Directive
+# Zela — Agent Instructions
 
-Build **Zela**, a modern, accessible Web Component library focused exclusively on components that are non-native or sufficiently complex to justify custom behavior.
+Build **Zela**, a lightweight, accessible Web Component library for complex or non-native UI. Treat it as an extension of the web platform, not a framework.
 
-The library should feel like an extension of the web platform, not a framework built on top of it.
+## Priorities
 
-All components use the `zela-` custom-element namespace:
-
-```html
-<zela-combobox></zela-combobox>
-<zela-dialog></zela-dialog>
-<zela-command-palette></zela-command-palette>
-```
-
-## Core Philosophy
-
-### Platform first
-
-Prefer native HTML, CSS, and browser APIs before introducing JavaScript abstractions.
-
-Use modern platform capabilities such as:
-
-- Custom Elements
-- Shadow DOM
-- `ElementInternals`
-- Form-associated custom elements
-- Popover API
-- CSS Anchor Positioning
-- Container queries
-- CSS nesting
-- `:has()`
-- Native transitions and animations
-- Modern focus and DOM APIs
-
-Do not recreate functionality that HTML or CSS already provides well.
-
-JavaScript should primarily provide behavior that the platform does not provide.
-
-### Accessibility first
-
-Accessibility is part of the component contract.
-
-Prefer native semantics over ARIA. Use WAI-ARIA patterns only when native HTML cannot express the required interaction.
-
-Every component should consider:
-
-- Keyboard interaction
-- Focus management
-- Screen readers
-- Reduced motion
-- Forced colors/high contrast
-- Disabled and unavailable states
-- Form behavior
-- Appropriate ARIA semantics
-
-### Minimal abstraction
-
-Do not build a framework.
-
-Avoid unnecessary:
-
-- Base classes
-- State-management systems
-- Component abstractions
-- Lifecycle frameworks
-- Utility packages
-- Dependencies
-- Build infrastructure
-
-Use abstractions only when they solve a real recurring problem.
+- Prefer modern HTML, CSS, and browser APIs. Use TypeScript only where it adds value.
+- Prefer native semantics over ARIA; use ARIA only when native HTML cannot express the required behavior.
+- Account for keyboard use, focus management, screen readers, reduced motion, forced colors, disabled states, and form behavior.
+- Keep solutions simple: avoid unnecessary dependencies, abstractions, files, and build infrastructure.
+- Use standard Custom Elements and Shadow DOM where appropriate. Do not add a component framework unless a concrete need justifies it.
+- Use the `zela-` custom-element prefix. Keep public APIs framework-agnostic.
 
 ## Repository Structure
 
-Use a pnpm monorepo with a single source package and colocated component implementation:
+This is a pnpm monorepo:
 
 ```text
 apps/
-├── docs/
+  docs/                  # Documentation site and component playground
 packages/
-└── src/
-    ├── components/
-    │   └── combobox/
-    │       ├── combobox.ts
-    │       ├── combobox.styles.ts
-    │       └── combobox.test.ts
-    ├── declaration.d.ts
-    ├── events/
-    ├── internal/
-    │   ├── validators/
-    │   └── ...
-    ├── styles/
-    │   ├── layers/
-    │   ├── themes/
-    │   ├── base/
-    │   ├── variants/
-    │   ├── colors/
-    │   └── utils/
-    ├── utilities/
-    └── main.ts
+  ui/                    # Public Web Component library
+    src/
+      components/
+        <component>/
+          <component>.ts
+          <component>.styles.ts
+          <component>.test.ts
+      declaration.d.ts
+      main.ts
 ```
 
-This structure is a starting point, not a rigid requirement.
+Keep each component's implementation, styles, and tests together. The directories below are optional and should be added only when there is a real need:
 
-Use judgment continuously. Remove, rename, merge, or reorganize directories when doing so produces a simpler and more maintainable architecture.
+- `src/events/` — shared event definitions or event utilities
+- `src/internal/` — shared private implementation details, such as validators, debounce, or DOM helpers
+- `src/styles/` — shared global styling primitives, such as layers, themes, base styles, colors, variants, and utilities
+- `src/utilities/` — functionality intended to be reusable beyond private implementation details
 
-### Component organization
+Do not create empty or speculative directories. Reorganize only when it makes the code simpler and easier to maintain.
 
-Components are self-contained.
+## Component Workflow
 
-A component's implementation, styles, and tests should live together:
+For each component:
 
-```text
-components/
-└── combobox/
-    ├── combobox.ts
-    ├── combobox.styles.ts
-    └── combobox.test.ts
-```
+1. Confirm that native HTML/CSS does not already solve the problem adequately.
+2. Define its behavior, semantics, accessibility, attributes, properties, events, slots, and CSS API.
+3. Implement with platform features first and keep component-specific code colocated.
+4. Add focused behavior and accessibility tests.
+5. Demonstrate it in `apps/docs`, using the package's public API.
+6. Verify relevant browser behavior and states.
+7. Extract shared code only after real reuse appears.
 
-Do not create centralized component-style or component-test directories.
+Prefer Vitest for component tests and Playwright for real-browser tests. Use accessibility tooling where it adds useful coverage. Avoid redundant test infrastructure.
 
-### Internal vs utilities
+## Tooling and Configuration
 
-Use `internal/` for implementation details that are shared internally but are not part of the public API.
+The repository already has a pnpm workspace, TypeScript project references, ESLint, Prettier, Vitest, Playwright, and Changesets. Inspect and use the existing setup before proposing replacements.
 
-Examples:
+**Protect the existing environment:**
 
-- Validators
-- Debouncing
-- Internal DOM helpers
-- Private state helpers
+- Do not install, uninstall, upgrade, downgrade, or replace packages without telling me first and getting approval.
+- Do not change root-level or global configuration, workspace setup, shared tooling, scripts, or dependency versions just to tidy things up.
+- If a concrete error or implementation requirement makes a package or configuration change necessary, explain the reason and intended change before proceeding. Make the smallest targeted fix; do not use it as an opportunity for unrelated cleanup.
+- Never modify machine-wide/global settings or tools as part of routine project work.
+- Prefer existing dependencies and scripts. Do not add a dependency when a small native solution is sufficient.
 
-Use `utilities/` for genuinely reusable public or broadly applicable functionality.
+## Working Rules
 
-### Events
+- Inspect relevant source files and existing conventions before editing.
+- Make focused, incremental changes; preserve unrelated work.
+- Avoid speculative architecture and premature optimization.
+- Do not remove tests, dependencies, or configuration merely because they appear redundant. Raise the concern first.
+- Run the most relevant existing checks after changes and report what was run and any failures.
+- Keep documentation and examples aligned with the actual public API.
 
-Centralize shared custom-event definitions and event-related utilities when multiple components need them.
-
-Events should have consistent naming, typing, and behavior.
-
-Component-specific events remain conceptually owned by their component.
-
-### Styles
-
-Keep global styling primitives under `styles/`.
-
-Possible areas include:
-
-- Cascade layers
-- Themes
-- Base styles
-- Colors
-- Variants
-- Utilities
-
-Do not create a style category simply because it seems architecturally complete. Every directory should contain something that provides real value.
-
-## Component Development
-
-Develop one component at a time.
-
-For every component:
-
-1. Identify the problem it solves.
-2. Identify the native HTML/CSS alternative.
-3. Determine whether a custom element is justified.
-4. Define its semantic and accessibility contract.
-5. Define attributes, properties, events, slots, and CSS APIs.
-6. Implement it using native platform capabilities.
-7. Keep component-specific logic and styles local.
-8. Add focused behavior and accessibility tests.
-9. Add it to `apps/docs`.
-10. Verify important browser and visual states.
-11. Extract shared behavior only when real reuse appears.
-
-## Testing
-
-Use testing to validate behavior, accessibility, and browser compatibility.
-
-Prefer:
-
-- Vitest for component behavior
-- axe-core for accessibility
-- Playwright for real browser interaction
-- Visual regression testing where it provides meaningful value
-
-Do not create fixtures, test packages, snapshot systems, or additional testing infrastructure unless they solve an actual problem.
-
-If an existing testing layer becomes redundant, remove it.
-
-## Documentation
-
-`apps/docs` is both the documentation site and development playground.
-
-It should make it easy to:
-
-- Develop components
-- Interactively inspect components
-- Test visual states
-- Demonstrate accessibility behavior
-- Document APIs
-- Show usage examples
-
-The docs should consume Zela through its public API rather than reaching into component internals.
-
-## Public API
-
-Components must work as standard Web Components:
-
-```html
-<zela-combobox></zela-combobox>
-```
-
-Prefer:
-
-- Attributes
-- Properties
-- Custom events
-- Slots
-- CSS custom properties
-- CSS parts where appropriate
-- Native form behavior
-
-Do not design the API around a particular JavaScript framework.
-
-## Technology Decisions
-
-Use TypeScript where it provides meaningful value.
-
-Prefer native browser APIs over third-party libraries.
-
-Use pnpm-workspace, tsconfig, eslint and prettier globally for all.
-
-**Do not introduce Lit, React, Vue, or another component framework unless the project demonstrates a concrete problem that the framework solves better than native Web Components.**
-
-The default implementation should use:
-
-```text
-Custom Elements
-+ Shadow DOM where appropriate
-+ native DOM APIs
-+ modern CSS
-+ TypeScript
-```
-
-Build tooling should compile and distribute standard Web Components rather than framework-specific components.
-
-## Architectural Judgment
-
-The proposed architecture is never authoritative.
-
-The implementation agent should actively look for opportunities to simplify.
-
-It is explicitly allowed to:
-
-- Rename directories
-- Merge directories
-- Delete directories
-- Move functionality
-- Remove dependencies
-- Replace abstractions with platform APIs
-- Remove redundant tests
-- Remove redundant fixtures
-- Simplify build configuration
-- Change the package structure
-
-Do not preserve architecture simply because it appeared in this document.
-
-When deciding between two viable approaches, prefer the one with:
-
-1. Less code
-2. Fewer dependencies
-3. Fewer abstractions
-4. Fewer files
-5. More native platform behavior
-6. Easier maintenance
-
-## Execution Order
-
-Work incrementally:
-
-1. Inspect the repository and existing tooling.
-2. Remove unnecessary or premature architecture.
-3. Establish the minimal pnpm workspace.
-4. Establish the build and test pipeline.
-5. Establish the minimal global styles/events/utilities required.
-6. Build one representative advanced component.
-7. Validate accessibility and browser behavior.
-8. Integrate it into `apps/docs`.
-9. Reassess the architecture based on actual reuse.
-10. Add additional components incrementally.
-11. Add publishing/versioning infrastructure when justified.
-
-**Do not optimize the architecture for hypothetical future components.**
-
-Build the smallest system that can support the component being built today, while keeping the path open for proven reuse tomorrow.
+When multiple solutions are viable, prefer native platform behavior, less code, fewer dependencies, fewer abstractions, and easier maintenance.

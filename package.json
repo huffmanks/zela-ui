@@ -5,21 +5,28 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm -r --filter ./apps/docs dev",
-    "build": "pnpm -r --filter ./packages/* --filter ./apps/* build",
+    "dev": "pnpm --filter docs dev",
+    "build": "pnpm -r build",
     "check": "pnpm run lint && pnpm run format && pnpm run typecheck && pnpm run build && pnpm run test && pnpm run e2e",
     "lint": "eslint .",
     "format": "prettier --write --list-different .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "e2e": "playwright test"
+    "typecheck": "tsc --build",
+    "test": "vitest run --environment happy-dom --exclude '**/e2e/**'",
+    "e2e": "playwright test",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^24.19.1",
     "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^20.14.5",
     "playwright": "^1.63.0",
     "prettier": "^3.9.9",
+    "typescript": "^6.0.0",
     "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3"
   }

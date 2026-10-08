@@ -1,47 +1,74 @@
-# Zela UI
+# Zela
 
-A modern, accessible web component library focused exclusively on components that are non-native.
+A modern, accessible Web Component library built on native HTML, CSS, and browser APIs.
+
+Zela focuses on components that are complex or not adequately provided by the web platform. It avoids recreating native HTML controls and minimizes JavaScript where the platform already provides a solution.
+
+## Principles
+
+- **Platform first** — Prefer native HTML, CSS, and browser APIs.
+- **Accessible by default** — Accessibility is part of every component's API.
+- **Minimal JavaScript** — Use TypeScript only where it provides real value.
+- **Framework agnostic** — Components work as standard Web Components.
+- **Simple architecture** — Favor fewer dependencies, abstractions, and moving parts.
 
 ## Structure
 
-```
+```text
 apps/
-├── docs/
+└── docs/                  # Documentation and playground
+
 packages/
-└── src/
-    ├── components/
-    │   └── combobox/
-    │       ├── combobox.ts
-    │       ├── combobox.styles.ts
-    │       └── combobox.test.ts
-    ├── declaration.d.ts
-    ├── events/
-    ├── internal/
-    │   ├── validators/
-    │   └── ...
-    ├── styles/
-    │   ├── layers/
-    │   ├── themes/
-    │   ├── base/
-    │   ├── variants/
-    │   ├── colors/
-    │   └── utils/
-    ├── utilities/
-    └── main.ts
+└── ui/                    # Web Component library
+    └── src/
+        └── components/
+            └── combobox/
+                ├── combobox.ts
+                ├── combobox.styles.ts
+                └── combobox.test.ts
 ```
 
-## Architecture
+Components use the `zela-` custom-element prefix:
 
-- **Platform-first**: prefer native HTML, `ElementInternals`, modern CSS
-- **Lifecycle**: `UIElement` base class enforces `AbortController` cleanup
-- **Styling**: base, themes, variants, layers, colors, utils.
+```html
+<zela-combobox></zela-combobox>
+```
 
-## Verification Matrix
+## Development
 
-Every component passes:
+Requires Node.js and pnpm.
 
-1. Unit tests (Vitest)
-2. Accessibility audits (axe-core)
-3. Multi-browser E2E (Playwright: Chromium/Firefox/WebKit)
-4. Visual regression snapshots
-5. Consumer fixture verification (unbundled HTML)
+```sh
+pnpm install
+pnpm dev
+```
+
+Run the full check suite:
+
+```sh
+pnpm check
+```
+
+Build the packages:
+
+```sh
+pnpm build
+```
+
+Run tests:
+
+```sh
+pnpm test
+```
+
+Run end-to-end tests:
+
+```sh
+pnpm e2e
+```
+
+## License
+
+## License
+
+[MIT](./LICENSE)

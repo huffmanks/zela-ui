@@ -9,8 +9,8 @@
       "repo": "huffmanks/zela-ui"
     }
   ],
-  "commit": true,
-  "ignore": [],
+  "commit": false,
+  "ignore": ["docs"],
   "fixed": [],
   "linked": [],
   "updateInternalDependencies": "patch"

@@ -8,6 +8,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "@zela/ui": "workspace:*"
+  },
   "devDependencies": {
     "vite": "^8.3.0"
   }
