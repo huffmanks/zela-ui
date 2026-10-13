@@ -1,4 +1,4 @@
-import { comboboxStyles } from "./combobox.styles.js";
+import { comboboxStyles } from "./combobox.styles.ts";
 
 type ComboboxOption = {
   value: string;
@@ -27,6 +27,7 @@ export class Combobox extends HTMLElement {
 
   readonly #internals: ElementInternals | undefined;
   readonly #input: HTMLInputElement;
+  readonly #selectedValues: HTMLDivElement;
   readonly #listbox: HTMLDivElement;
   readonly #optionsSlot: HTMLSlotElement;
   readonly #clearButton: HTMLButtonElement;
@@ -48,6 +49,7 @@ export class Combobox extends HTMLElement {
     root.innerHTML = `
       <style>${comboboxStyles}</style>
       <div class="control" part="control">
+        <div class="selected-values" part="selected-values"></div>
         <input
           class="input"
           part="input"
@@ -71,12 +73,14 @@ export class Combobox extends HTMLElement {
     `;
 
     this.#input = root.querySelector<HTMLInputElement>("input")!;
+    this.#selectedValues = root.querySelector<HTMLDivElement>(".selected-values")!;
     this.#listbox = root.querySelector<HTMLDivElement>(".listbox")!;
     this.#clearButton = root.querySelector<HTMLButtonElement>(".clear")!;
     this.#optionsSlot = root.querySelector<HTMLSlotElement>("slot")!;
 
     this.#input.addEventListener("input", this.#onInput);
     this.#input.addEventListener("keydown", this.#onKeyDown);
+    this.#selectedValues.addEventListener("click", this.#onSelectedValueClick);
     this.#input.addEventListener("focus", this.#onFocus);
     this.#input.addEventListener("blur", this.#onBlur);
     this.#listbox.addEventListener("mousedown", this.#onOptionMouseDown);
@@ -130,6 +134,7 @@ export class Combobox extends HTMLElement {
     this.#syncOptions();
     this.#renderOptions();
     this.#syncClearButton();
+    this.#showSelectedLabels();
   }
 
   formAssociatedCallback() {
@@ -220,7 +225,7 @@ export class Combobox extends HTMLElement {
     if (!this.multiple) {
       this.#values.clear();
       this.#syncFormValue();
-      this.#syncClearButton();
+      this.#clearButton.hidden = !this.clearable;
     }
 
     this.#openList();
@@ -231,7 +236,7 @@ export class Combobox extends HTMLElement {
     if (this.disabled || this.#formDisabled) return;
 
     this.#querying = false;
-    this.#input.value = "";
+    if (!this.multiple) this.#input.value = "";
     this.#openList();
   };
 
@@ -241,6 +246,7 @@ export class Combobox extends HTMLElement {
 
       this.#close();
       this.#querying = false;
+      if (this.multiple) this.#input.value = "";
       this.#showSelectedLabels();
     });
   };
@@ -281,6 +287,7 @@ export class Combobox extends HTMLElement {
       event.preventDefault();
       this.#close();
       this.#querying = false;
+      if (this.multiple) this.#input.value = "";
       this.#showSelectedLabels();
     }
   };
@@ -300,6 +307,23 @@ export class Combobox extends HTMLElement {
     if (!option || option.disabled) return;
 
     this.#selectOption(option);
+    this.#input.focus();
+  };
+
+  #onSelectedValueClick = (event: MouseEvent) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const button = target.closest<HTMLButtonElement>("[data-remove-value]");
+    if (!button || this.disabled || this.#formDisabled) return;
+
+    const value = button.dataset.removeValue;
+    if (value === undefined) return;
+
+    this.#setValues(
+      [...this.#values].filter((item) => item !== value),
+      true
+    );
     this.#input.focus();
   };
 
@@ -327,6 +351,7 @@ export class Combobox extends HTMLElement {
     this.#input.setAttribute("aria-required", String(this.required));
     this.#listbox.setAttribute("aria-multiselectable", String(this.multiple));
     this.#clearButton.hidden = !this.clearable || this.#values.size === 0;
+    this.#showSelectedLabels();
   }
 
   #allOptions(): ComboboxOption[] {
@@ -352,7 +377,32 @@ export class Combobox extends HTMLElement {
   }
 
   #showSelectedLabels() {
-    this.#input.value = this.#selectedLabels().join(", ");
+    if (!this.multiple) {
+      this.#input.value = this.#selectedLabels()[0] ?? "";
+      return;
+    }
+
+    this.#selectedValues.replaceChildren();
+
+    for (const option of this.#allOptions().filter((item) => this.#values.has(item.value))) {
+      const chip = document.createElement("span");
+      chip.className = "selected-value";
+      chip.setAttribute("part", "selected-value");
+      chip.append(document.createTextNode(option.label));
+
+      if (!this.disabled && !this.#formDisabled) {
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-value";
+        remove.setAttribute("part", "remove-value");
+        remove.setAttribute("aria-label", `Remove ${option.label}`);
+        remove.dataset.removeValue = option.value;
+        remove.textContent = "×";
+        chip.append(remove);
+      }
+
+      this.#selectedValues.append(chip);
+    }
   }
 
   #filteredOptions() {
@@ -502,6 +552,7 @@ export class Combobox extends HTMLElement {
       this.#querying = true;
       this.#input.value = "";
       this.#activeIndex = -1;
+      this.#showSelectedLabels();
       this.#syncFormValue();
       this.#renderOptions();
       this.#syncClearButton();
@@ -526,6 +577,7 @@ export class Combobox extends HTMLElement {
     this.#syncClearButton();
 
     if (this.multiple) {
+      this.#input.value = this.#querying ? this.#input.value : "";
       this.#showSelectedLabels();
     } else {
       this.#input.value = this.#selectedLabels()[0] ?? "";
@@ -541,6 +593,7 @@ export class Combobox extends HTMLElement {
 
   #syncClearButton() {
     this.#clearButton.hidden = !this.clearable || this.#values.size === 0;
+    this.#showSelectedLabels();
   }
 
   #syncFormValue() {

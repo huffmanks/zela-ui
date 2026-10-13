@@ -48,9 +48,59 @@ export const comboboxStyles = `
   outline-offset: 2px;
 }
 
-.input {
-  width: 100%;
+:host([multiple]) .control {
+  flex-wrap: wrap;
+  padding: 0.25rem;
+}
+
+.selected-values {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
   min-width: 0;
+  max-width: 100%;
+}
+
+:host(:not([multiple])) .selected-values {
+  display: none;
+}
+
+.selected-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  padding: 0.25rem 0.375rem;
+  border-radius: calc(var(--zu-combobox-radius) / 1.5);
+  background: var(--zu-color-muted, rgb(127 127 127 / 18%));
+  white-space: nowrap;
+}
+
+.remove-value {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.2rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.remove-value:hover {
+  background: rgb(127 127 127 / 20%);
+}
+
+.input {
+  flex: 1 1 0%;
+  width: 0;
+  min-width: 2.5rem;
   min-height: calc(var(--zu-combobox-height) - 2px);
   padding: var(--zu-combobox-padding);
   border: 0;
@@ -58,6 +108,11 @@ export const comboboxStyles = `
   background: transparent;
   color: inherit;
   font: inherit;
+}
+
+:host([multiple]) .input {
+  min-height: 1.75rem;
+  padding: 0.25rem 0.375rem;
 }
 
 .input:focus-visible {
@@ -74,9 +129,10 @@ export const comboboxStyles = `
   cursor: pointer;
 }
 
-.clear:focus-visible {
+.clear:focus-visible,
+.remove-value:focus-visible {
   outline: 2px solid var(--zu-combobox-focus);
-  outline-offset: -2px;
+  outline-offset: 1px;
 }
 
 :host(:not([clearable])) .clear,
@@ -89,7 +145,8 @@ export const comboboxStyles = `
 }
 
 :host([disabled]) .input,
-:host([disabled]) .clear {
+:host([disabled]) .clear,
+:host([disabled]) .remove-value {
   cursor: not-allowed;
 }
 

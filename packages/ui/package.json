@@ -16,6 +16,7 @@
     "dist"
   ],
   "type": "module",
+  "types": "./dist/src/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
@@ -24,16 +25,18 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vpr pack",
-    "dev": "vpr pack --watch",
-    "test": "vpr test",
-    "check": "vpr check",
+    "generate:types": "node scripts/generate-types.mjs",
+    "build": "vp run generate:types && vp pack",
+    "dev": "vp run generate:types && vp pack --watch",
+    "test": "vp test",
+    "check": "vp check",
     "prepublishOnly": "vp run build"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
     "bumpp": "^11.1.0",
-    "typescript": "^7.0.2",
+    "happy-dom": "catalog:",
+    "typescript": "^6.0.2",
     "vite-plus": "catalog:"
   }
 }
