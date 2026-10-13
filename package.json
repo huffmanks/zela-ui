@@ -1,33 +1,23 @@
 {
-  "name": "zela-ui",
-  "description": "A modern, accessible web component library focused exclusively on components that are non-native.",
-  "private": true,
+  "name": "Zela UI monorepo",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter docs dev",
-    "build": "pnpm -r build",
-    "check": "pnpm run lint && pnpm run format && pnpm run typecheck && pnpm run build && pnpm run test && pnpm run e2e",
-    "lint": "eslint .",
-    "format": "prettier --write --list-different .",
-    "typecheck": "tsc --build",
-    "test": "vitest run --environment happy-dom --exclude '**/e2e/**'",
-    "e2e": "playwright test",
-    "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "ready": "vp check && vp run -r test && vp run -r build",
+    "dev": "vp run docs#dev"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3",
-    "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.63.0",
-    "@types/node": "^24.19.1",
-    "eslint-config-prettier": "^10.1.8",
-    "happy-dom": "^20.14.5",
-    "playwright": "^1.63.0",
-    "prettier": "^3.9.9",
-    "typescript": "^6.0.0",
-    "typescript-eslint": "^8.71.1",
-    "vitest": "^5.0.3"
+    "vite-plus": "catalog:"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.11.2",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

@@ -11,12 +11,15 @@ node_modules
 dist
 dist-ssr
 *.local
-*.tsbuildinfo
-playwright-report
-test-results
+
+# dotenv environment variable files
+.env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*
+!.vscode/settings.json
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -25,3 +28,9 @@ test-results
 *.njsproj
 *.sln
 *.sw?
+
+# AI agent worktrees
+.claude/worktrees/
+!.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json

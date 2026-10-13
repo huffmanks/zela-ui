@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
-import "./combobox.js";
+import { describe, expect, it } from "vite-plus/test";
+import "./combobox.ts";
 
 describe("combobox", () => {
-  it("defines zela-combobox", () => {
-    expect(customElements.get("zela-combobox")).toBeDefined();
+  it("defines zu-combobox", () => {
+    expect(customElements.get("zu-combobox")).toBeDefined();
   });
 });

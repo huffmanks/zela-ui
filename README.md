@@ -17,7 +17,6 @@ Zela focuses on components that are complex or not adequately provided by the we
 ```text
 apps/
 └── docs/                  # Documentation and playground
-
 packages/
 └── ui/                    # Web Component library
     └── src/
@@ -28,46 +27,11 @@ packages/
                 └── combobox.test.ts
 ```
 
-Components use the `zela-` custom-element prefix:
+Components use the `zu-` custom-element prefix:
 
 ```html
-<zela-combobox></zela-combobox>
+<zu-combobox></zu-combobox>
 ```
-
-## Development
-
-Requires Node.js and pnpm.
-
-```sh
-pnpm install
-pnpm dev
-```
-
-Run the full check suite:
-
-```sh
-pnpm check
-```
-
-Build the packages:
-
-```sh
-pnpm build
-```
-
-Run tests:
-
-```sh
-pnpm test
-```
-
-Run end-to-end tests:
-
-```sh
-pnpm e2e
-```
-
-## License
 
 ## License
 

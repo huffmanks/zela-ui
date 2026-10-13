@@ -14,4 +14,4 @@ export class Combobox extends HTMLElement {
   }
 }
 
-customElements.define("zela-combobox", Combobox);
+customElements.define("zu-combobox", Combobox);

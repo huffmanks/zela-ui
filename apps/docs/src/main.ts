@@ -1,3 +1,5 @@
+import "./style.css";
+
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-<h1>Zela UI Docs</h1>
+<main><h1>Docs</h1></main>
 `;

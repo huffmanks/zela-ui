@@ -1,12 +1,9 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "composite": true
-  },
-  "include": [],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./packages/ui" },
-    { "path": "./apps/docs" }
-  ]
+    "noEmit": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true
+  }
 }
