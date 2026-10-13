@@ -1,1 +1,1 @@
-import "./components/combobox/combobox.js";
+export { Combobox } from "./components/combobox/combobox.js";

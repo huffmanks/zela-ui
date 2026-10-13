@@ -183,6 +183,10 @@ importers:
         version: 1.1.0(@types/node@26.6.5)(@vitest/ui@5.0.3)(jiti@2.7.0)(typescript@7.0.2)(yaml@2.9.1)
 
   apps/docs:
+    dependencies:
+      '@zela/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
     devDependencies:
       typescript:
         specifier: ^7.0.2

@@ -1,5 +1,5 @@
 {
-  "name": "Zela UI",
+  "name": "@zela/ui",
   "version": "0.0.0",
   "description": "A modern, accessible web component library focused exclusively on components that are non-native.",
   "homepage": "https://github.com/huffmanks/zela-ui#readme",
@@ -24,10 +24,10 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vp pack",
-    "dev": "vp pack --watch",
-    "test": "vp test",
-    "check": "vp check",
+    "build": "vpr pack",
+    "dev": "vpr pack --watch",
+    "test": "vpr test",
+    "check": "vpr check",
     "prepublishOnly": "vp run build"
   },
   "devDependencies": {

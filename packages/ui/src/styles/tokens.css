@@ -1,0 +1,7 @@
+:root {
+  --zu-color-text: CanvasText;
+  --zu-color-surface: Canvas;
+  --zu-color-border: color-mix(in srgb, CanvasText 35%, transparent);
+  --zu-color-focus: Highlight;
+  --zu-radius-control: 0.375rem;
+}
