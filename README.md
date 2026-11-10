@@ -1,6 +1,6 @@
 # Zela
 
-A modern, accessible Web Component library built on native HTML, CSS, and browser APIs.
+A modern, accessible Web Component library built on native HTML, CSS and browser APIs.
 
 Zela focuses on components that are complex or not adequately provided by the web platform. It avoids recreating native HTML controls and minimizes JavaScript where the platform already provides a solution.
 
